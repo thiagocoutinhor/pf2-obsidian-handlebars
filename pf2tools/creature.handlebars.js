@@ -1,10 +1,10 @@
 handlebars.registerPartial('ac', '{{defenses.ac.std}}{{#each defenses.ac}}{{#unless (eq @key "std")}} ({{.}} {{@key}}){{/unless}}{{/each}}')
-handlebars.registerPartial('hp', '{{#each defenses.hp}}{{hp}}{{#each abilities}}{{#if @first}} ({{/if}}{{.}}{{#unless @last}}, {{else}}){{/unless}}{{/each}}{{/each}}')
+handlebars.registerPartial('hp', '{{#each defenses.hp}}{{hp}}{{#each abilities}}{{#if @first}} ({{/if}}{{cleanDecorator .}}{{#unless @last}}, {{else}}){{/unless}}{{/each}}{{/each}}')
 handlebars.registerPartial('immunities', '{{#each defenses.immunities}}{{#if @first}}; **Immunities** {{/if}}{{.}}{{#unless @last}}, {{/unless}}{{/each}}')
 handlebars.registerPartial('weaknesses', '{{#each defenses.weaknesses}}{{#if @first}}; **Weaknesses** {{/if}}{{name}} {{amount}}{{#unless @last}}, {{/unless}}{{/each}}')
 handlebars.registerPartial('resistances', '{{#each defenses.resistances}}{{#if @first}}; **Resistances** {{/if}}{{name}} {{amount}}{{#if note}} ({{note}}){{/if}}{{#unless @last}}, {{/unless}}{{/each}}')
 handlebars.registerPartial('inlineTraits', '{{#each traits}}{{#if @first}} ({{/if}}{{{cleanDecorator .}}}{{#unless @last}}, {{else}}){{/unless}}{{/each}}')
-handlebars.registerPartial('ability', '> **{{name}}**{{{action activity}}}{{>inlineTraits}}{{#if trigger}} **Trigger** {{trigger}} **Effect**{{/if}} {{{cleanDecorator (abilityEntry entries)}}}\n')
+handlebars.registerPartial('ability', '> **{{name}}**{{{action activity}}}{{>inlineTraits}}{{#if trigger}} **Trigger** {{cleanDecorator trigger}} **Effect**{{/if}} {{{cleanDecorator (abilityEntry entries)}}}\n')
 
 function numberSuffix(number) {
     const suffix = number > 3 ? 'th' : ['', 'st', 'nd', 'rd'][number]

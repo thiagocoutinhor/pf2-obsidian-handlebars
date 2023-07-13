@@ -9,7 +9,7 @@ modifier: {{perception.std}}
 >
 > **Perception** {{plusNumber perception.std}};{{#each senses}} {{cleanDecorator name}}{{#if type}} ({{type}}){{/if}}{{#if range}} {{range}} feet{{/if}}{{#unless @last}},{{/unless}}{{/each}}
 {{#if languages}}
-> **Languages** {{#each languages.languages}}{{capitalize .}}{{#unless @last}}, {{/unless}}{{/each}}
+> **Languages** {{#each languages.languages}}{{{capitalize .}}}{{#unless @last}}, {{/unless}}{{/each}}
 {{/if}}
 > **Skills** {{#each skills}}{{capitalize @key}} {{plusNumber std}}{{#unless @last}}, {{/unless}}{{/each}}
 > {{#each abilityMods}}**{{capitalize @key}}** {{plusNumber .}}{{#unless @last}}, {{/unless}}{{/each}}
