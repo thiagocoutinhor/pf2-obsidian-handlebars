@@ -1,4 +1,4 @@
-const handlebars = require('handlebars')
+global.handlebars = require('handlebars')
 require('@budibase/handlebars-helpers')();
 require('./creature.handlebars.js')
 

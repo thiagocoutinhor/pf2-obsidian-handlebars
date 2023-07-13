@@ -1,5 +1,3 @@
-const handlebars = require('handlebars')
-
 handlebars.registerPartial('inlineTraits', '{{#each traits}}{{#if @first}} ({{/if}}{{{.}}}{{#unless @last}}, {{else}}){{/unless}}{{/each}}')
 handlebars.registerPartial('ability', '> **{{name}}**{{{action activity}}}{{>inlineTraits}} {{{cleanDecorator (abilityEntry entries)}}}\n')
 
