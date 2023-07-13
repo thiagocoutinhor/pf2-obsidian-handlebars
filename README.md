@@ -6,6 +6,8 @@ Handlebars for importing Pathfinder 2 data to obsidian
 
 With the JSON/CSV Importer installed in Obsidian, click the magnifying glass icon.
 
+> 🚨 THe `run.js` script is provided for testing purposes only
+
 ## Creatures
 
 Fill the following fields:
