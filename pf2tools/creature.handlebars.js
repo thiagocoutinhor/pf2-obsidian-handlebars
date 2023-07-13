@@ -6,6 +6,11 @@ handlebars.registerPartial('resistances', '{{#each defenses.resistances}}{{#if @
 handlebars.registerPartial('inlineTraits', '{{#each traits}}{{#if @first}} ({{/if}}{{{cleanDecorator .}}}{{#unless @last}}, {{else}}){{/unless}}{{/each}}')
 handlebars.registerPartial('ability', '> **{{name}}**{{{action activity}}}{{>inlineTraits}}{{#if trigger}} **Trigger** {{trigger}} **Effect**{{/if}} {{{cleanDecorator (abilityEntry entries)}}}\n')
 
+function numberSuffix(number) {
+    const suffix = number > 3 ? 'th' : ['', 'st', 'nd', 'rd'][number]
+    return `${number}${suffix}`
+}
+
 handlebars.registerHelper('action', function(value) {
     actionMap = {
         'reaction': { 1: ' [R](moo.md#Actions "Reaction")' },
@@ -61,19 +66,28 @@ handlebars.registerHelper('plusNumber', function(value) {
 })
 
 handlebars.registerHelper('spellSort', function(spells) {
-    result = {}
+    const result = {}
+    let constant = null
     for (const [level, spellList] of Object.entries(spells).reverse()) {
-        const levelSuffix = level > 4 ? 'th' : ['', 'st', 'nd', 'rd'][level]
-        const levelName = level == 0 ? 'Cantrips' : `${level}${levelSuffix}`
+        if (level == 'constant') {
+            const constantLevel = Object.keys(spellList)[0]
+            const constantSpells = Object.values(spellList)[0]
+            constant = {
+                name: `Constant (${numberSuffix(constantLevel)})`,
+                spells: constantSpells
+            }
+            continue
+        }
+        const levelName = level == 0 ? 'Cantrips' : `${numberSuffix(level)}`
         result[levelName] = spellList
+    }
+    if (constant) {
+        result[constant.name] = constant.spells
     }
     return result
 })
 
-handlebars.registerHelper('numberSuffix', function(number) {
-    const suffix = number > 4 ? 'th' : ['', 'st', 'nd', 'rd'][number]
-    return `${number}${suffix}`
-})
+handlebars.registerHelper('numberSuffix', numberSuffix)
 
 handlebars.registerHelper('abilityEntry', function(entries) {
     function entryParser(entry) {

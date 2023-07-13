@@ -35,7 +35,7 @@ modifier: {{perception.std}}
 > **{{range}}** [>](moo.md#Actions "Single Action") {{name}} {{plusNumber attack}} {{>inlineTraits}} {{#if damage}}**Damage** {{cleanDecorator damage}}{{/if}} {{#if effect}}**Effect** {{cleanDecorator effect}}{{/if}}
 {{/each}}
 {{#each spellcasting}}
-> **{{#if tradition}}{{capitalize tradition}} {{capitalize type}} Spells{{/if}}{{#if name}}{{name}}{{/if}}** DC {{DC}}{{#if fp}} ({{fp}} Focus Points){{/if}}{{#each (spellSort entry)}}; **{{@key}}{{#if level}} ({{numberSuffix level}}){{/if}}** {{#each spells}}{{name}}{{#if amount}} ({{amount}}){{/if}}{{#unless @last}}, {{/unless}}{{/each}}{{/each}}
+> **{{#if tradition}}{{capitalize tradition}} {{capitalize type}} Spells{{/if}}{{#if name}}{{name}}{{/if}}** DC {{DC}}{{#if attack}}, attack {{plusNumber attack}}{{/if}}{{#if fp}} ({{fp}} Focus Points){{/if}}{{#each (spellSort entry)}}; **{{@key}}{{#if level}} ({{numberSuffix level}}){{/if}}** {{#each spells}}{{name}}{{#if amount}} ({{amount}}){{/if}}{{#each notes}}{{#if @first}} ({{/if}}{{.}}{{#unless @last}}, {{else}}){{/unless}}{{/each}}{{#unless @last}}, {{/unless}}{{/each}}{{/each}}
 {{/each}}
 {{#each abilities.bot}}
 {{>ability}}
