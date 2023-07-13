@@ -1,5 +1,10 @@
-handlebars.registerPartial('inlineTraits', '{{#each traits}}{{#if @first}} ({{/if}}{{{.}}}{{#unless @last}}, {{else}}){{/unless}}{{/each}}')
-handlebars.registerPartial('ability', '> **{{name}}**{{{action activity}}}{{>inlineTraits}} {{{cleanDecorator (abilityEntry entries)}}}\n')
+handlebars.registerPartial('ac', '{{defenses.ac.std}}{{#each defenses.ac}}{{#unless (eq @key "std")}} ({{.}} {{@key}}){{/unless}}{{/each}}')
+handlebars.registerPartial('hp', '{{#each defenses.hp}}{{hp}}{{#each abilities}}{{#if @first}} ({{/if}}{{.}}{{#unless @last}}, {{else}}){{/unless}}{{/each}}{{/each}}')
+handlebars.registerPartial('immunities', '{{#each defenses.immunities}}{{#if @first}}; **Immunities** {{/if}}{{.}}{{#unless @last}}, {{/unless}}{{/each}}')
+handlebars.registerPartial('weaknesses', '{{#each defenses.weaknesses}}{{#if @first}}; **Weaknesses** {{/if}}{{name}} {{amount}}{{#unless @last}}, {{/unless}}{{/each}}')
+handlebars.registerPartial('resistances', '{{#each defenses.resistances}}{{#if @first}}; **Resistances** {{/if}}{{name}} {{amount}}{{#if note}} ({{note}}){{/if}}{{#unless @last}}, {{/unless}}{{/each}}')
+handlebars.registerPartial('inlineTraits', '{{#each traits}}{{#if @first}} ({{/if}}{{{cleanDecorator .}}}{{#unless @last}}, {{else}}){{/unless}}{{/each}}')
+handlebars.registerPartial('ability', '> **{{name}}**{{{action activity}}}{{>inlineTraits}}{{#if trigger}} **Trigger** {{trigger}} **Effect**{{/if}} {{{cleanDecorator (abilityEntry entries)}}}\n')
 
 handlebars.registerHelper('action', function(value) {
     actionMap = {
@@ -10,6 +15,9 @@ handlebars.registerHelper('action', function(value) {
             1: ' [>](moo.md#Actions "Single Action")',
             2: ' [>>](moo.md#Actions "Two-Action")',
             3: ' [>>>](moo.md#Actions "Three-Action")'
+        },
+        'varies': {
+            1: ' [>](moo.md#Actions "Single Action") to [>>>](moo.md#Actions "Three-Action")'
         }
     }
     if (value) {
@@ -77,6 +85,7 @@ handlebars.registerHelper('abilityEntry', function(entries) {
                 for (item of entry.items) {
                     entryResult.push(`> - ${entryParser(item)}`)
                 }
+                entryResult.push('>')
             } else if (entry.type == 'item') {
                 for (item of entry.entries) {
                     entryResult.push(entryParser(item))
@@ -91,6 +100,10 @@ handlebars.registerHelper('abilityEntry', function(entries) {
         }
     }
 
+    if (!entries) {
+        return ''
+    }
+
     result = []
     for (entry of entries) {
         result.push(entryParser(entry))
@@ -99,8 +112,9 @@ handlebars.registerHelper('abilityEntry', function(entries) {
 })
 
 handlebars.registerHelper('cleanDecorator', function(text) {
-    const regex = /{@(\w*) (.*?)}/g
-    return text.replace(regex, (substring, ...args) => {
+    // @ decorators
+    let regex = /{@(\w*) (.*?)}/g
+    text = text.replace(regex, (substring, ...args) => {
         const decorator = args[0]
         const content = args[1].split('||').slice(-1)
 
@@ -122,4 +136,12 @@ handlebars.registerHelper('cleanDecorator', function(text) {
 
         return content
     })
+
+    // < > decorators
+    regex = /<(.*?)>/g
+    text = text.replace(regex, (substring, ...args) => {
+        return args[0]
+    })
+
+    return text
 })

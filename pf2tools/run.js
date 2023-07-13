@@ -5,8 +5,15 @@ require('./creature.handlebars.js')
 const fs = require('fs')
 const creatureHandlebar = fs.readFileSync(`${__dirname}/creature.handlebars.md`, 'utf-8')
 
-const json = require('./creature.handlebars.json')
+const json = require('./creatures-b2.json').creature
 
 const template = handlebars.compile(creatureHandlebar)
-const parsed = template(json)
-console.log(parsed)
+
+for (creature of json) {
+    console.log(creature.name)
+    const parsed = template(creature)
+    if (creature.name == 'Adult White Dragon') {
+        console.log(parsed)
+        break
+    }
+}

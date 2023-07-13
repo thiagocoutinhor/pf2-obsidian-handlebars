@@ -8,28 +8,34 @@ modifier: {{perception.std}}
 > {{#each traits}}[{{#if (eq (traitType .) 'Alignment')}}{{uppercase .}}{{else}}{{capitalize .}}{{/if}}](rules/traits/{{.}}.md "{{traitType .}}") {{/each}}
 >
 > **Perception** {{plusNumber perception.std}};{{#each senses}} {{cleanDecorator name}}{{#if type}} ({{type}}){{/if}}{{#if range}} {{range}} feet{{/if}}{{#unless @last}},{{/unless}}{{/each}}
+{{#if languages}}
 > **Languages** {{#each languages.languages}}{{capitalize .}}{{#unless @last}}, {{/unless}}{{/each}}
+{{/if}}
 > **Skills** {{#each skills}}{{capitalize @key}} {{plusNumber std}}{{#unless @last}}, {{/unless}}{{/each}}
 > {{#each abilityMods}}**{{capitalize @key}}** {{plusNumber .}}{{#unless @last}}, {{/unless}}{{/each}}
 {{#if items}}
-> **Items** {{cleanDecorator (join items ', ')}}
+> **Items** {{join items ', '}}
 {{/if}}
 {{#each abilities.top}}
 {{>ability}}
 {{/each}}
+>
 > ---
-> **AC** {{defenses.ac.std}}; {{#each defenses.savingThrows}}**{{capitalize @key}}** {{plusNumber std}}{{#unless @last}}, {{/unless}}{{/each}}
-> **HP** {{#each defenses.hp}}{{hp}}{{#each abilities}}, {{.}}{{/each}}{{/each}}{{#each defenses.immunities}}{{#if @first}}; **Immunities** {{/if}}{{.}}{{#unless @last}}, {{/unless}}{{/each}}{{#each defenses.weaknesses}}{{#if @first}}; **Weaknesses**{{/if}}{{.}}{{#unless @last}}, {{/unless}}{{/each}}{{#each defenses.resistances }}{{#if @first}}; **Resistances** {{/if}}{{.}}{{#unless @last}}, {{/unless}}{{/each}}
+>
+> **AC** {{>ac}}; {{#with defenses.savingThrows}}**Fort** {{plusNumber fort.std}}, **Ref** {{plusNumber ref.std}}, **Will** {{plusNumber will.std}}{{#each abilities}}{{#if @first}}; {{else}}, {{/if}}{{.}}{{/each}}{{/with}}
+> **HP** {{>hp}}{{>immunities}}{{>weaknesses}}{{>resistances}}
 {{#each abilities.mid}}
 {{>ability}}
 {{/each}}
+>
 > ---
+>
 > **Speed** {{#each speed}}{{#if (not (eq @key 'walk'))}}{{capitalize @key}} {{/if}}{{.}} feet{{#unless @last}}, {{/unless}}{{/each}}
 {{#each attacks}}
-> **{{range}}** [>](moo.md#Actions "Single Action") {{name}} {{plusNumber attack}} {{>inlineTraits}} {{#if damage}}**Damage** {{damage}}{{/if}} {{#if effect}}**Effect** {{effect}}{{/if}}
+> **{{range}}** [>](moo.md#Actions "Single Action") {{name}} {{plusNumber attack}} {{>inlineTraits}} {{#if damage}}**Damage** {{cleanDecorator damage}}{{/if}} {{#if effect}}**Effect** {{cleanDecorator effect}}{{/if}}
 {{/each}}
 {{#each spellcasting}}
-> **{{capitalize tradition}} {{capitalize type}} Spells** DC {{DC}}{{#each (spellSort entry)}}; **{{@key}}{{#if level}} ({{numberSuffix level}}){{/if}}** {{#each spells}}{{name}}{{#if amount}} ({{amount}}){{/if}}{{#unless @last}}, {{/unless}}{{/each}}{{/each}}
+> **{{#if tradition}}{{capitalize tradition}} {{capitalize type}} Spells{{/if}}{{#if name}}{{name}}{{/if}}** DC {{DC}}{{#if fp}} ({{fp}} Focus Points){{/if}}{{#each (spellSort entry)}}; **{{@key}}{{#if level}} ({{numberSuffix level}}){{/if}}** {{#each spells}}{{name}}{{#if amount}} ({{amount}}){{/if}}{{#unless @last}}, {{/unless}}{{/each}}{{/each}}
 {{/each}}
 {{#each abilities.bot}}
 {{>ability}}
