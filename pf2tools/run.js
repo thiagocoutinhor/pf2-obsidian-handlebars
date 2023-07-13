@@ -16,13 +16,13 @@ async function getBestiary(number) {
 const fs = require('fs')
 const creatureHandlebar = fs.readFileSync(`${__dirname}/creature.handlebars.md`, 'utf-8')
 
-getBestiary(3).then(json => {
+getBestiary(1).then(json => {
     const template = handlebars.compile(creatureHandlebar)
 
     for (creature of json.creature) {
         console.log(creature.name)
         const parsed = template(creature)
-        if (creature.name == 'Adult White Dragon') {
+        if (creature.name == 'Ancient Gold Dragon') {
             console.log(parsed)
             break
         }

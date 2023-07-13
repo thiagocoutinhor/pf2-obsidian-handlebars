@@ -1,3 +1,5 @@
+const { Exception } = require("handlebars")
+
 handlebars.registerPartial('ac', '{{defenses.ac.std}}{{#each defenses.ac}}{{#unless (eq @key "std")}} ({{.}} {{@key}}){{/unless}}{{/each}}')
 handlebars.registerPartial('hp', '{{#each defenses.hp}}{{hp}}{{#each abilities}}{{#if @first}} ({{/if}}{{.}}{{#unless @last}}, {{else}}){{/unless}}{{/each}}{{/each}}')
 handlebars.registerPartial('immunities', '{{#each defenses.immunities}}{{#if @first}}; **Immunities** {{/if}}{{.}}{{#unless @last}}, {{/unless}}{{/each}}')
@@ -104,11 +106,19 @@ handlebars.registerHelper('abilityEntry', function(entries) {
                 for (item of entry.entries) {
                     entryResult.push(entryParser(item))
                 }
+            } else if (entry.type == 'ability') {
+                abilityText = `**${entry.name}** (${entry.traits.join(', ')}) `
+                for (item of entry.entries) {
+                    entryResult.push(entryParser(item))
+                }
+                entryResult[0] = abilityText + entryResult[0]
             } else if (entry.type == 'successDegree') {
                 for ([key, value] of Object.entries(entry.entries)) {
                     entryResult.push(`>> **${key}** ${value}`)
                 }
                 entryResult.push('>')
+            } else {
+                entryResult.push(entry)
             }
             return entryResult.join('\n')
         }
