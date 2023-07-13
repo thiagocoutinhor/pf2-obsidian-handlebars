@@ -1,19 +1,30 @@
 global.handlebars = require('handlebars')
 require('@budibase/handlebars-helpers')();
 require('./creature.handlebars.js')
+const axios = require('axios').default
+
+async function getBestiary(number) {
+    try {
+        url = `https://raw.githubusercontent.com/Pf2eToolsOrg/Pf2eTools/dev/data/bestiary/creatures-b${number}.json`
+        const response = await axios.get(url)
+        return response.data
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 const fs = require('fs')
 const creatureHandlebar = fs.readFileSync(`${__dirname}/creature.handlebars.md`, 'utf-8')
 
-const json = require('./creatures-b2.json').creature
+getBestiary(3).then(json => {
+    const template = handlebars.compile(creatureHandlebar)
 
-const template = handlebars.compile(creatureHandlebar)
-
-for (creature of json) {
-    console.log(creature.name)
-    const parsed = template(creature)
-    if (creature.name == 'Adult White Dragon') {
-        console.log(parsed)
-        break
+    for (creature of json.creature) {
+        console.log(creature.name)
+        const parsed = template(creature)
+        if (creature.name == 'Adult White Dragon') {
+            console.log(parsed)
+            break
+        }
     }
-}
+})
