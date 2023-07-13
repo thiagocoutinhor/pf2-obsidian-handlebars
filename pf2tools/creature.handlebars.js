@@ -1,5 +1,3 @@
-const { Exception } = require("handlebars")
-
 handlebars.registerPartial('ac', '{{defenses.ac.std}}{{#each defenses.ac}}{{#unless (eq @key "std")}} ({{.}} {{@key}}){{/unless}}{{/each}}')
 handlebars.registerPartial('hp', '{{#each defenses.hp}}{{hp}}{{#each abilities}}{{#if @first}} ({{/if}}{{.}}{{#unless @last}}, {{else}}){{/unless}}{{/each}}{{/each}}')
 handlebars.registerPartial('immunities', '{{#each defenses.immunities}}{{#if @first}}; **Immunities** {{/if}}{{.}}{{#unless @last}}, {{/unless}}{{/each}}')
